@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>造句畫畫機</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
+<style>
+:root {
+--bg-main: #FFFCF5;
+--bg-card: #FFFFFF;
+--bg-input: #FFF7EB;
+--accent-pink: #F2668B;
+--accent-orange: #FF9E5E;
+--accent-teal: #3CC8B4;
+--accent-purple: #9B72CF;
+--accent-yellow: #FFD166;
+--text-main: #2B2D42;
+--text-sub: #6B7280;
+--text-light: #9CA3AF;
+--border-soft: #E8E0F0;
+--shadow-card: 0 10px 40px rgba(155, 114, 207, 0.12);
+--radius: 20px;
+}
+.dark {
+--bg-main: #13111C;
+--bg-card: #1E1A2E;
+--bg-input: #2A2440;
+--accent-pink: #FF7FA5;
+--accent-orange: #FFB07A;
+--accent-teal: #5EDDC9;
+--accent-purple: #B48FE8;
+--accent-yellow: #FFD97A;
+--text-main: #F0EDF6;
+--text-sub: #A8A0B8;
+--text-light: #6B6380;
+--border-soft: #352F4A;
+--shadow-card: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+{ margin: 0; padding: 0; box-sizing: border-box; }
+body {
+font-family: 'Noto Sans TC', sans-serif;
+background: var(--bg-main);
+color: var(--text-main);
+min-height: 100vh;
+overflow-x: hidden;
+}
+body::before {
+content: '';
+position: fixed;
+inset: 0;
+background:
+radial-gradient(ellipse 60% 50% at 10% 20%, rgba(155, 114, 207, 0.08) 0%, transparent 70%),
+radial-gradient(ellipse 50% 40% at 85% 75%, rgba(242, 102, 139, 0.06) 0%, transparent 70%),
+radial-gradient(ellipse 40% 30% at 50% 10%, rgba(60, 200, 180, 0.05) 0%, transparent 70%);
+pointer-events: none;
+z-index: 0;
+}
+.app-wrapper {
+position: relative;
+z-index: 1;
+max-width: 860px;
+margin: 0 auto;
+padding: 24px 16px 48px;
+}
+/* ── Header ── /
+header {
+text-align: center;
+padding: 32px 0 28px;
+animation: headerIn 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.logo-icon {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+width: 64px; height: 64px;
+border-radius: 18px;
+background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+color: #fff;
+font-size: 1.8rem;
+margin-bottom: 14px;
+box-shadow: 0 6px 24px rgba(155, 114, 207, 0.25);
+}
+h1 {
+font-family: 'Baloo 2', 'Noto Sans TC', sans-serif;
+font-size: 2.2rem;
+font-weight: 800;
+line-height: 1.2;
+background: linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-pink) 50%, var(--accent-orange) 100%);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+background-clip: text;
+}
+.subtitle {
+margin-top: 8px;
+color: var(--text-sub);
+font-size: 0.95rem;
+}
+.badge {
+display: inline-block;
+margin-top: 12px;
+padding: 6px 16px;
+border-radius: 999px;
+background: linear-gradient(135deg, var(--accent-teal), var(--accent-purple));
+color: #fff;
+font-size: 0.8rem;
+font-weight: 700;
+letter-spacing: 0.5px;
+}
+/* ── Card ── /
+.card {
+background: var(--bg-card);
+border: 1px solid var(--border-soft);
+border-radius: var(--radius);
+padding: 32px 28px;
+margin-bottom: 20px;
+box-shadow: var(--shadow-card);
+animation: cardIn 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+/* ── Section titles ── /
+.section-title {
+font-family: 'Baloo 2', sans-serif;
+font-size: 1.1rem;
+font-weight: 700;
+margin-bottom: 12px;
+display: flex;
+align-items: center;
+gap: 8px;
+}
+.section-title i {
+font-size: 1rem;
+width: 28px; height: 28px;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+border-radius: 8px;
+color: #fff;
+}
+.icon-pen { background: var(--accent-pink); }
+.icon-palette { background: var(--accent-purple); }
+.icon-text { background: var(--accent-teal); }
+/* ── Textarea ── /
+.form-group { margin-bottom: 28px; }
+textarea {
+width: 100%;
+min-height: 110px;
+padding: 16px 18px;
+border: 2px solid var(--border-soft);
+border-radius: 14px;
+font-size: 16px;
+font-family: 'Noto Sans TC', sans-serif;
+background: var(--bg-input);
+color: var(--text-main);
+resize: vertical;
+transition: border-color 0.25s, box-shadow 0.25s;
+}
+textarea::placeholder { color: var(--text-light); }
+textarea:focus {
+outline: none;
+border-color: var(--accent-purple);
+box-shadow: 0 0 0 4px rgba(155, 114, 207, 0.12);
+}
+.input-hint {
+margin-top: 8px;
+font-size: 0.82rem;
+color: var(--text-light);
+line-height: 1.5;
+}
+/* ── Style grid ── /
+.style-grid {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+gap: 10px;
+}
+.style-option { position: relative; }
+.style-option input { position: absolute; opacity: 0; pointer-events: none; }
+.style-chip {
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 6px;
+padding: 12px 10px;
+border: 2px solid var(--border-soft);
+border-radius: 12px;
+background: var(--bg-input);
+cursor: pointer;
+font-size: 0.88rem;
+font-weight: 600;
+text-align: center;
+transition: all 0.25s;
+user-select: none;
+}
+.style-chip:hover {
+border-color: var(--accent-purple);
+transform: translateY(-2px);
+}
+.style-option input:checked + .style-chip {
+background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+color: #fff;
+border-color: transparent;
+box-shadow: 0 4px 16px rgba(155, 114, 207, 0.3);
+transform: scale(1.04);
+}
+/* ── Binary option chips ── /
+.binary-row {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 10px;
+}
+.binary-option { position: relative; }
+.binary-option input { position: absolute; opacity: 0; pointer-events: none; }
+.binary-chip {
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 8px;
+padding: 14px 10px;
+border: 2px solid var(--border-soft);
+border-radius: 14px;
+background: var(--bg-input);
+cursor: pointer;
+font-size: 0.92rem;
+font-weight: 600;
+transition: all 0.25s;
+}
+.binary-chip:hover { border-color: var(--accent-teal); }
+.binary-option input:checked + .binary-chip {
+background: linear-gradient(135deg, var(--accent-teal), #34B8A5);
+color: #fff;
+border-color: transparent;
+box-shadow: 0 4px 14px rgba(60, 200, 180, 0.25);
+}
+/* ── Generate button ── /
+.generate-btn {
+width: 100%;
+padding: 18px;
+border: none;
+border-radius: 16px;
+font-family: 'Baloo 2', 'Noto Sans TC', sans-serif;
+font-size: 1.2rem;
+font-weight: 700;
+color: #fff;
+cursor: pointer;
+background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink), var(--accent-orange));
+background-size: 200% 200%;
+box-shadow: 0 6px 24px rgba(155, 114, 207, 0.3);
+transition: all 0.3s;
+animation: gradientShift 4s ease infinite;
+}
+.generate-btn:hover:not(:disabled) {
+transform: translateY(-3px);
+box-shadow: 0 10px 32px rgba(155, 114, 207, 0.4);
+}
+.generate-btn:active:not(:disabled) { transform: translateY(-1px); }
+.generate-btn:disabled {
+opacity: 0.55;
+cursor: not-allowed;
+transform: none !important;
+}
+/* ── Loading ── /
+.loading-card {
+display: none;
+text-align: center;
+padding: 48px 20px;
+}
+.loading-card.active { display: block; }
+.loader-ring {
+width: 72px; height: 72px;
+margin: 0 auto 20px;
+border-radius: 50%;
+border: 5px solid var(--border-soft);
+border-top-color: var(--accent-purple);
+border-right-color: var(--accent-pink);
+animation: spin 0.9s linear infinite;
+}
+.loading-card .load-text {
+font-family: 'Baloo 2', sans-serif;
+font-size: 1.15rem;
+font-weight: 700;
+color: var(--text-sub);
+}
+.loading-card .load-sub {
+color: var(--text-light);
+font-size: 0.85rem;
+margin-top: 6px;
+}
+/* ── Toast / error ── /
+.toast {
+display: none;
+padding: 16px 20px;
+border-radius: 14px;
+margin-top: 16px;
+font-weight: 600;
+font-size: 0.92rem;
+text-align: center;
+}
+.toast.error {
+background: linear-gradient(135deg, #FF6B7A, #FF8E99);
+color: #fff;
+}
+.toast.active { display: block; animation: shake 0.4s ease; }
+/* ── Result ── /
+.result-card { display: none; }
+.result-card.active { display: block; animation: cardIn 0.5s ease; }
+.result-header {
+text-align: center;
+margin-bottom: 18px;
+}
+.result-header h2 {
+font-family: 'Baloo 2', sans-serif;
+font-size: 1.3rem;
+font-weight: 700;
+}
+.result-img-wrap {
+border-radius: 16px;
+overflow: hidden;
+box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+}
+.result-img-wrap img {
+width: 100%;
+height: auto;
+display: block;
+}
+/* ── Animations ── /
+@keyframes headerIn {
+from { opacity: 0; transform: translateY(-20px); }
+to { opacity: 1; transform: translateY(0); }
+}
+@keyframes cardIn {
+from { opacity: 0; transform: translateY(16px) scale(0.98); }
+to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes shake {
+0%,100% { transform: translateX(0); }
+25% { transform: translateX(-8px); }
+75% { transform: translateX(8px); }
+}
+@keyframes gradientShift {
+0%,100% { background-position: 0% 50%; }
+50% { background-position: 100% 50%; }
+}
+/* ── Responsive ── /
+@media (max-width: 640px) {
+h1 { font-size: 1.75rem; }
+.card { padding: 24px 18px; }
+.style-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="app-wrapper">
+<!-- Header -->
+<header>
+<div class="logo-icon"><i class="fas fa-pencil"></i></div>
+<h1>造句畫畫機</h1>
+<p class="subtitle">輸入你的造句，AI 幫你畫成一幅漂亮的圖畫！</p>
+<span class="badge">適合小學 3-6 年級 &middot; AI 創作</span>
+</header>
+<!-- Input Card -->
+<div class="card" style="animation-delay:0.05s;">
+<form id="mainForm" autocomplete="off">
+<!-- Sentence input -->
+<div class="form-group">
+<div class="section-title">
+<i class="fas fa-pen-nib icon-pen"></i> 輸入你的造句
+</div>
+<textarea id="promptText" placeholder="例如：春天來了，花園裡的花朵都開了，蝴蝶在花叢中飛舞。" required></textarea>
+<p class="input-hint"><i class="fas fa-lightbulb"></i> 小提示：寫一個完整的句子，AI 就會根據句子的內容幫你畫出一幅圖畫喔！</p>
+</div>
+<!-- Style picker -->
+<div class="form-group">
+<div class="section-title">
+<i class="fas fa-swatchbook icon-palette"></i> 選擇圖畫風格
+</div>
+<div class="style-grid" id="styleGrid"></div>
+</div>
+<!-- Text toggle -->
+<div class="form-group">
+<div class="section-title">
+<i class="fas fa-font icon-text"></i> 圖片文字選項
+</div>
+<div class="binary-row">
+<div class="binary-option">
+<input type="radio" name="textMode" id="modeWith" value="with" checked>
+<label for="modeWith" class="binary-chip">
+<i class="fas fa-quote-left"></i> 包含造句文字
+</label>
+</div>
+<div class="binary-option">
+<input type="radio" name="textMode" id="modeWithout" value="without">
+<label for="modeWithout" class="binary-chip">
+<i class="fas fa-image"></i> 純圖畫（無文字）
+</label>
+</div>
+</div>
+</div>
+<!-- Submit -->
+<button type="submit" class="generate-btn" id="generateBtn">
+<i class="fas fa-wand-magic-sparkles"></i>&ensp;生成圖畫
+</button>
+</form>
+<div class="toast error" id="toastError"></div>
+</div>
+<!-- Loading -->
+<div class="card loading-card" id="loadingCard">
+<div class="loader-ring"></div>
+<div class="load-text">正在把你的造句變成圖畫…</div>
+<div class="load-sub">AI 繪圖中，請稍候片刻</div>
+</div>
+<!-- Result -->
+<div class="card result-card" id="resultCard">
+<div class="result-header">
+<h2>🎉 你的造句圖畫完成了！</h2>
+</div>
+<div class="result-img-wrap">
+<img id="resultImage" alt="AI 根據造句生成的圖畫">
+</div>
+</div>
+</div>
+<script>
+/* ── Dark mode ── /
+(function() {
+var mq = window.matchMedia('(prefers-color-scheme: dark)');
+function apply(e) {
+document.documentElement.classList.toggle('dark', e.matches);
+}
+apply(mq);
+mq.addEventListener('change', apply);
+})();
+/* ── Style definitions ── /
+var STYLES = [
+{ id: 'storybook', label: '兒童繪本風', value: '兒童繪本風 (Children's storybook illustration style)' },
+{ id: 'fresh', label: '小清新手繪風', value: '小清新手繪風 (Fresh hand-drawn illustration style)' },
+{ id: 'watercolor', label: '水彩輕塗鴉風', value: '水彩輕塗鴉風 (Light watercolor doodle style)' },
+{ id: 'pastel', label: '粉彩粉蠟筆風', value: '粉彩粉蠟筆風 (Soft pastel crayon style)' },
+{ id: 'minimal', label: '極簡概念插畫風', value: '極簡概念插畫風 (Minimalist concept illustration style)' },
+{ id: 'notes', label: '學習筆記風', value: '學習筆記風（仿手寫重點）(Study notes style with handwritten highlights)' },
+{ id: 'chalk', label: '黑板粉筆風', value: 'Chalkboard 黑板粉筆風 (Chalkboard chalk drawing style)' },
+{ id: 'healing', label: '圓潤治癒插畫風', value: '圓潤治癒插畫風 (Rounded healing illustration style)' },
+{ id: 'macaron', label: '馬卡龍配色插畫風', value: '馬卡龍配色插畫風 (Macaron color palette illustration style)' },
+{ id: 'textbook', label: '課本風', value: '課本風（教材常見的平面插畫）(Textbook-style flat illustration)' },
+{ id: 'icons', label: '俏皮符號插畫風', value: '俏皮符號化插畫風（Icons＋角色）(Playful icon-based illustration style with characters)' },
+{ id: 'anime', label: '日本卡通風', value: '日本卡通風（Japanese anime/cartoon style with big expressive eyes, dynamic poses, vibrant colors, and cute character designs）' }
+];
+/* ── Render style chips ── /
+(function() {
+var grid = document.getElementById('styleGrid');
+STYLES.forEach(function(s, i) {
+var html = '<div class="style-option">'
+'<input type="radio" name="artStyle" id="s_' + s.id + '" value="' + i + '"' + (i === 0 ? ' checked' : '') + '>'
+'<label for="s_' + s.id + '" class="style-chip">' + s.label + '</label>'
+'</div>';
+grid.insertAdjacentHTML('beforeend', html);
+});
+})();
+/* ── Show toast helper ── /
+function showToast(msg) {
+var t = document.getElementById('toastError');
+t.textContent = msg;
+t.classList.add('active');
+setTimeout(function() { t.classList.remove('active'); }, 4000);
+}
+/* ── Register handler ── /
+window.Poe.registerHandler('img-result', function(result) {
+var msg = result.responses[0];
+var loadingCard = document.getElementById('loadingCard');
+var resultCard = document.getElementById('resultCard');
+var resultImage = document.getElementById('resultImage');
+var generateBtn = document.getElementById('generateBtn');
+if (msg.status === 'error') {
+loadingCard.classList.remove('active');
+showToast('生成失敗：' + (msg.statusText || '請稍後再試'));
+generateBtn.disabled = false;
+} else if (msg.status === 'incomplete') {
+// still loading
+} else if (msg.status === 'complete') {
+loadingCard.classList.remove('active');
+if (msg.attachments && msg.attachments.length > 0) {
+var imgAtt = msg.attachments.find(function(a) {
+return a.mimeType && a.mimeType.startsWith('image/');
+});
+if (imgAtt) {
+resultImage.src = imgAtt.url;
+resultCard.classList.add('active');
+setTimeout(function() {
+resultCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}, 250);
+} else {
+showToast('回應中沒有圖片，請重試');
+}
+} else {
+showToast('未能生成圖片，請重試');
+}
+generateBtn.disabled = false;
+}
+});
+/* ── Form submit ── /
+document.getElementById('mainForm').addEventListener('submit', async function(e) {
+e.preventDefault();
+var promptText = document.getElementById('promptText').value.trim();
+if (!promptText) {
+showToast('請先輸入你的造句！');
+return;
+}
+var styleIdx = parseInt(document.querySelector('input[name="artStyle"]:checked').value);
+var styleDef = STYLES[styleIdx];
+var textMode = document.querySelector('input[name="textMode"]:checked').value;
+// Hide previous results
+document.getElementById('toastError').classList.remove('active');
+document.getElementById('resultCard').classList.remove('active');
+// Show loading
+document.getElementById('loadingCard').classList.add('active');
+document.getElementById('generateBtn').disabled = true;
+// Build prompt
+var textInstr = textMode === 'with'
+? 'The image MUST include the following original sentence displayed clearly in Traditional Chinese (繁體中文) as part of the illustration: 「' + promptText + '」'
+: 'The image should contain NO text at all — pure visual illustration only.';
+var fullPrompt = 'Create a cartoon-style illustration based on an elementary school student's sentence, in the style of: ' + styleDef.value + '.
+'
+'Student's sentence (造句):
+「' + promptText + '」
+'
+'Requirements:
+'
+'- Art style: ' + styleDef.value + '
+'
+'- Target audience: Elementary school students (grades 3-6, ages 8-12)
+'
+'- Visualize the scene described in the sentence as a vivid cartoon illustration
+'
+'- ' + textInstr + '
+'
+'- Use vibrant, child-friendly colors
+'
+'- Make the illustration lively, imaginative, and fun
+'
+'- Include cute cartoon characters acting out the sentence
+'
+'- The illustration should help children understand and appreciate the sentence';
+try {
+await window.Poe.sendUserMessage(
+'@Nano-Banana-Pro ' + fullPrompt,
+{
+handler: 'img-result',
+stream: false,
+openChat: false,
+parameters: {
+image_only: true,
+image_size: '2K',
+aspect_ratio: '3:2'
+}
+}
+);
+} catch (err) {
+document.getElementById('loadingCard').classList.remove('active');
+document.getElementById('generateBtn').disabled = false;
+if (err.errorType === 'USER_REJECTED_CONFIRMATION') {
+showToast('您已取消操作');
+} else {
+showToast('發生錯誤：' + (err.message || '請稍後再試'));
+}
+}
+});
+</script>
+</body>
+</html>
